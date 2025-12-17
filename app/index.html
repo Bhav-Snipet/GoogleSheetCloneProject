@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheet Clone</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="script.js" defer></script> <!--we use defer so script.js will execute after completion of html body-->
+    <script src="options.js" defer></script>
+    <script src="import-export.js" defer></script>
+</head>
+<body>
+    <section class="options">
+        <div class="fr-aic" style="justify-content: center; gap: 15px;">
+            <form class="form-container" id="options-form">
+                <select name="fontFamily">
+                    <option value="default">Default</option>
+                </select>
+                <input type="number" name="fontSize" value="16"/>
+                <div>
+                    <input type="checkbox" name="isBold" id="isBold"/>
+                    <label for="isBold"class="material-icons">format_bold</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="isItalic" id="isItalic"/>
+                    <label for="isItalic" class="material-icons">format_italic</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="isUnderlined" id="isUnderlined"/>
+                    <label for="isUnderlined" class="material-icons">format_underlined</label>
+                </div>
+                <div class="align-container">
+                    <div>
+                        <input type="radio" name="align" value="left" id="left" checked/> <!--bydefault left align is given-->
+                        <label for="left" class="material-icons">format_align_left</label> <!--format_align_left is taken from symbols n fonts webiste-->
+                    </div>
+                    <div>
+                        <input type="radio" name="align" value="center" id="center"/>
+                        <label for="center" class="material-icons">format_align_center</label>
+                    </div>
+                    <div>
+                        <input type="radio" name="align" value="right" id="right"/>
+                        <label for="right" class="material-icons">format_align_right</label>
+                    </div>
+                </div>
+                <div>
+                    <input type="color" name="textColor" id="textColor"/>
+                    <label for="textColor" class="material-icons">format_color_text</label>
+                </div>
+                <div>
+                    <input value="#ffffff" type="color" name="backgroundColor" id="bgColor"/>
+                    <label for="bgColor" class="material-icons">format_color_fill</label>
+                </div>
+            </form>
+            <button type="button" id="downloadBtn" class="material-icons">cloud_download</button>
+            <label for="upload" class="material-icons" id="uploadBtn">cloud_upload</label>
+            <input type="file" id="upload" class="upload" style="display: none;"/>
+        </div>
+        <div class="box fr-aic">
+            <div class="selected-cell">null</div>
+            <input type="text" placeholder="evaluate-expression" class="expression"/>
+        </div>
+    </section>
+    <section class="container">
+        <!--for that top left single element i.e. junction cell -->
+        <div class="plate"></div>
+        <!--to create top row A-Z-->
+        <div class="head-row"></div>
+        <!--to create numbers column-->
+        <div class="serailNo"></div>
+        <!--to create body i.e. cell-->
+        <div class="body"></div>
+    </section>
+</body>
+</html>

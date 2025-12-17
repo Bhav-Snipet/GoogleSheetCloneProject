@@ -1,0 +1,148 @@
+body{
+    margin: 0%;
+}
+
+.body{
+    background-color: white;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 40px auto;
+    grid-template-rows: 30px auto;
+    height: 100%;
+    width: 100%;
+    border:  1px solid antiquewhite;
+    overflow-x: scroll; /*to get scroll bar down side*/
+    box-sizing: border-box;
+}
+
+.plate{
+    background-color: grey;
+    left :0;
+    top :0;
+    position: sticky;
+    z-index: 2;
+}
+
+.head-row {
+    display: flex; /* so that A-Z can be displayed in same row*/
+    top : 0;
+    position: sticky; /* top:0 and position:sticky will make head-row will show always */
+    background-color: white;
+}
+
+.head-row .col-head{ /*this .col-head is achieved through js */
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid gray;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.serailNo{
+    background-color: white;
+    left : 0;
+    position: sticky; /* left:0 and position:sticky will make numbers will show always */
+}
+
+.serailNo .sno-cell{ /*this .sno-cell is achieved through js*/
+    height: 30px;
+    border : 1px solid gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight :600;
+    font-size: 18px;
+}
+
+.row { /* done through js*/
+    display: flex;
+}
+
+.cell{ /*this .cell is achieved from js and is a div */
+    border: 1px solid gray;
+    width: 150px;
+    height: 30px;
+    resize: none;
+    font-style: normal;
+    overflow-y: hidden;
+    /* overflow-y: scroll; */ /*so we can scroll each cell*/
+}
+
+.options {
+    background-color: gray;
+    height: 15vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.form-container {
+    padding: 10px;
+    margin: 0 30px;
+    background-color: grey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 50px;
+}
+
+.fr-aic{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.align-container{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+input[type="checkbox"] , input[type="radio"]{
+    display: none;
+}
+
+input[type="color"]{
+    width: 0;
+    height: 0;
+    visibility: hidden;
+}
+
+input[type="checkbox"]:checked + label, input[type="radio"]:checked + label{
+    background-color:lightblue;
+}
+
+label{
+    padding: 5px;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.box{
+    width: 80vw;
+    margin: auto;
+}
+
+.box input {
+    flex-grow: 1;
+    padding: 5px;
+    border-radius: 50px;
+    border-width: 1px;
+}
+
+.box .selected-cell {
+    background-color: #d3e2fd;
+    padding: 5px;
+    border-radius: 5px;
+    width: 50px;
+    text-align: center;
+}
+
+.active-cell {
+    border: 1px solid lightskyblue;
+}
