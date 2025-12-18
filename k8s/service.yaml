@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: googlesheetclone-service
+  namespace: 2401025-googlesheetclone
+spec:
+  selector:
+    app: googlesheetclone
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP
