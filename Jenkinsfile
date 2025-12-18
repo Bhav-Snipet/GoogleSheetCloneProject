@@ -6,16 +6,22 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
+
   - name: dind
     image: docker:dind
     args:
+      - "--host=tcp://0.0.0.0:2375"
       - "--storage-driver=overlay2"
       - "--insecure-registry=nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085"
+      - "--tls=false"
+      - "--tlsverify=false"
     securityContext:
       privileged: true
     env:
       - name: DOCKER_TLS_CERTDIR
         value: ""
+      - name: DOCKER_HOST
+        value: "tcp://localhost:2375"
 
   - name: kubectl
     image: bitnami/kubectl:latest
@@ -48,8 +54,8 @@ spec:
                 container('dind') {
                     sh '''
                         dockerd-entrypoint.sh &
-                        sleep 20
-                        docker info
+                        sleep 25
+                        docker version
                         docker build -t $IMAGE_NAME .
                         docker images
                     '''
@@ -85,6 +91,5 @@ spec:
                 }
             }
         }
-
-    } // end stages
-} // end pipeline
+    }
+}

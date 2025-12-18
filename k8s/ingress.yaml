@@ -3,6 +3,8 @@ kind: Ingress
 metadata:
   name: googlesheetclone-ingress
   namespace: 2401025-googlesheetclone
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   ingressClassName: nginx
   rules:
