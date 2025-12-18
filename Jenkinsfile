@@ -38,14 +38,13 @@ spec:
         K8S_NAMESPACE = "2401025-googlesheetclone"
     }
 
-    stages {
+    stage('Checkout Code') {
+    steps {
+        git branch: 'master',
+            url: 'https://github.com/Bhav-Snipet/GoogleSheetCloneProject.git'
+    }
+}
 
-        stage('Checkout Code') {
-            steps {
-                git branch: 'main',
-                    url: 'https://github.com/Bhav-Snipet/GoogleSheetCloneProject.git'
-            }
-        }
 
         stage('Build Docker Image') {
             steps {
