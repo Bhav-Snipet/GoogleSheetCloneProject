@@ -1,4 +1,4 @@
-FROM registry.k8s.io/nginx:alpine
+FROM registry.k8s.io/nginxinc/nginx-unprivileged:stable
 
 RUN rm -rf /usr/share/nginx/html/*
 
