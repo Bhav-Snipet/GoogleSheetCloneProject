@@ -29,22 +29,19 @@ spec:
         APP_NAME      = "googlesheetclone"
         IMAGE_TAG     = "v1"
         REGISTRY_URL  = "nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085"
-
-        // Your roll number naming style
         REGISTRY_REPO = "2401025-googlesheetclone"
-
         IMAGE_NAME    = "${REGISTRY_URL}/${REGISTRY_REPO}/${APP_NAME}:${IMAGE_TAG}"
-
         K8S_NAMESPACE = "2401025-googlesheetclone"
     }
 
-    stage('Checkout Code') {
-        steps {
-            git branch: 'master',
-                url: 'https://github.com/Bhav-Snipet/GoogleSheetCloneProject.git'
-        }
-    }
+    stages {
 
+        stage('Checkout Code') {
+            steps {
+                git branch: 'master',
+                    url: 'https://github.com/Bhav-Snipet/GoogleSheetCloneProject.git'
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
@@ -70,8 +67,7 @@ spec:
                     )]) {
                         sh '''
                             docker login http://nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085 \
-                              -u $NEXUS_USER -p $NEXUS_PASS
-
+                                -u $NEXUS_USER -p $NEXUS_PASS
                             docker push $IMAGE_NAME
                         '''
                     }
@@ -89,5 +85,6 @@ spec:
                 }
             }
         }
-    }
-}
+
+    } // end stages
+} // end pipeline
