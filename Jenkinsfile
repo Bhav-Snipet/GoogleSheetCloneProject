@@ -39,11 +39,11 @@ spec:
     }
 
     stage('Checkout Code') {
-    steps {
-        git branch: 'master',
-            url: 'https://github.com/Bhav-Snipet/GoogleSheetCloneProject.git'
+        steps {
+            git branch: 'master',
+                url: 'https://github.com/Bhav-Snipet/GoogleSheetCloneProject.git'
+        }
     }
-}
 
 
         stage('Build Docker Image') {
