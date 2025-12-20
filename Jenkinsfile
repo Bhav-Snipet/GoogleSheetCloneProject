@@ -6,6 +6,7 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
+
     - name: dind
       image: docker:27.0.3-dind
       securityContext:
@@ -27,21 +28,18 @@ spec:
 
     - name: kubectl
       image: bitnami/kubectl:latest
-      command:
-        - cat
+      command: ["cat"]
       tty: true
 '''
+        }
     }
-}
-
 
     environment {
-        APP_NAME      = "googlesheetclone"
-        IMAGE_TAG     = "v1"
-        REGISTRY_URL  = "nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085"
-        REGISTRY_REPO = "2401025-googlesheetclone"
-        IMAGE_NAME    = "${REGISTRY_URL}/${REGISTRY_REPO}/${APP_NAME}:${IMAGE_TAG}"
-        K8S_NAMESPACE = "2401025-googlesheetclone"
+        IMAGE_LOCAL = "googlesheetclone:latest"
+        REGISTRY = "nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085"
+        REPO = "2401025-project"
+        IMAGE_REMOTE = "${REGISTRY}/${REPO}/googlesheetclone:latest"
+        K8S_NAMESPACE = "2401025"
     }
 
     stages {
@@ -57,30 +55,31 @@ spec:
             steps {
                 container('dind') {
                     sh '''
-                        dockerd-entrypoint.sh &
-                        sleep 25
-                        docker version
-                        docker build -t $IMAGE_NAME .
-                        docker images
+                        sleep 10
+                        docker build -t $IMAGE_LOCAL .
+                        docker image ls
                     '''
                 }
             }
         }
 
-        stage('Push Image to Nexus') {
+        stage('Login to Nexus Registry') {
             steps {
                 container('dind') {
-                    withCredentials([usernamePassword(
-                        credentialsId: 'nexus-credentials',
-                        usernameVariable: 'NEXUS_USER',
-                        passwordVariable: 'NEXUS_PASS'
-                    )]) {
-                        sh '''
-                            docker login http://nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085 \
-                                -u $NEXUS_USER -p $NEXUS_PASS
-                            docker push $IMAGE_NAME
-                        '''
-                    }
+                    sh '''
+                        docker login $REGISTRY -u admin -p Changeme@2025
+                    '''
+                }
+            }
+        }
+
+        stage('Tag & Push Image') {
+            steps {
+                container('dind') {
+                    sh '''
+                        docker tag $IMAGE_LOCAL $IMAGE_REMOTE
+                        docker push $IMAGE_REMOTE
+                    '''
                 }
             }
         }
@@ -89,11 +88,28 @@ spec:
             steps {
                 container('kubectl') {
                     sh '''
-                        kubectl apply -n $K8S_NAMESPACE -f k8s/
-                        kubectl rollout status deployment/googlesheetclone-deployment -n $K8S_NAMESPACE
+                    kubectl get namespace $K8S_NAMESPACE || kubectl create namespace $K8S_NAMESPACE
+                    kubectl apply -f k8s/deployment.yaml -n $K8S_NAMESPACE
+                    kubectl apply -f k8s/service.yaml -n $K8S_NAMESPACE
+                    kubectl apply -f k8s/ingress.yaml -n $K8S_NAMESPACE
+
+                    kubectl delete pod -l app=googlesheetclone -n $K8S_NAMESPACE || true
                     '''
                 }
             }
         }
+
+        stage('Debug Kubernetes') {
+            steps {
+                container('kubectl') {
+                    sh '''
+                        kubectl get pods -n $K8S_NAMESPACE
+                        kubectl get svc -n $K8S_NAMESPACE
+                        kubectl get ingress -n $K8S_NAMESPACE
+                    '''
+                }
+            }
+        }
+
     }
 }

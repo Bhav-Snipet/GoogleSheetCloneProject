@@ -2,9 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: googlesheetclone-ingress
-  namespace: 2401025-googlesheetclone
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+  namespace: "2401025"
 spec:
   ingressClassName: nginx
   rules:

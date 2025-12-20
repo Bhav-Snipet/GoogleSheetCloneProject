@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: googlesheetclone-service
-  namespace: 2401025-googlesheetclone
+  namespace: "2401025"
 spec:
   selector:
     app: googlesheetclone
