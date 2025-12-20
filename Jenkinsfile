@@ -104,6 +104,22 @@ spec:
             }
         }
 
+        stage('Create ImagePull Secret') {
+            steps {
+                container('kubectl') {
+                    sh """
+                    kubectl create secret docker-registry nexus-registry-secret \
+                    --docker-server=nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085 \
+                    --docker-username=admin \
+                    --docker-password=Changeme@2025 \
+                    --namespace=2401025 \
+                    || echo "Secret already exists, continuing..."
+                    """
+                }
+            }
+        }
+
+
         stage('Deploy App') {
             steps {
                 container('kubectl') {

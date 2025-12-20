@@ -5,22 +5,21 @@ metadata:
   namespace: "2401025"
   labels:
     app: googlesheetclone
-
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: googlesheetclone
-
   template:
     metadata:
       labels:
         app: googlesheetclone
-
     spec:
+      imagePullSecrets:
+        - name: nexus-registry-secret
       containers:
-      - name: googlesheetclone-app
-        image: nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/2401025-project/googlesheetclone-app-2401025:latest
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 80
+        - name: googlesheetclone-app
+          image: nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/2401025-project/googlesheetclone-app-2401025:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
