@@ -1,11 +1,10 @@
-# Use official Nginx image
 FROM nginx:latest
 
-# Remove default nginx website
+# Remove default nginx content
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy your static project files to Nginx public folder
+# Copy your project files to Nginx html directory
 COPY . /usr/share/nginx/html/
 
-# Expose port 80
+# Expose web port
 EXPOSE 80

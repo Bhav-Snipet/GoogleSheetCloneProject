@@ -2,17 +2,19 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: googlesheetclone-ingress
-  namespace: "2401025"
+  namespace: 2401025
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+
 spec:
-  ingressClassName: nginx
   rules:
-    - host: 2401025-googlesheetclone.imcc.com
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: googlesheetclone-service
-                port:
-                  number: 80
+  - host: googlesheetclone.imcc.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: googlesheetclone-service
+            port:
+              number: 80
