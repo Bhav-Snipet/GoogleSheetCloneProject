@@ -1,20 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: googlesheetclone-deployment
-  namespace: "2401025"
+  name: sheet-app-deployment
+  namespace: 2401025
+  labels:
+    app: sheet-app
+
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: googlesheetclone
+      app: sheet-app
+
   template:
     metadata:
       labels:
-        app: googlesheetclone
+        app: sheet-app
+
     spec:
       containers:
-        - name: googlesheetclone
-          image: nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/2401025-project/googlesheetclone:latest
-          ports:
-            - containerPort: 80
+      - name: sheet-app
+        image: nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/2401025-project/sheet-app-2401025:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
