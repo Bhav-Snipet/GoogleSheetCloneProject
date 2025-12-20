@@ -69,8 +69,8 @@ spec:
                     withCredentials([string(credentialsId: 'sonar-token-2401025', variable: 'SONAR_TOKEN')]) {
                         sh '''
                             sonar-scanner \
-                                -Dsonar.projectKey=GoogleSheetClone \
-                                -Dsonar.projectName=GoogleSheetClone \
+                                -Dsonar.projectKey=googlesheetclone \
+                                -Dsonar.projectName=googlesheetclone \
                                 -Dsonar.host.url=http://my-sonarqube-sonarqube.sonarqube.svc.cluster.local:9000 \
                                 -Dsonar.login=$SONAR_TOKEN \
                                 -Dsonar.sources=.
@@ -79,6 +79,8 @@ spec:
                 }
             }
         }
+
+
 
         stage('Login to Docker Registry') {
             steps {
