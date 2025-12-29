@@ -157,5 +157,43 @@ spec:
             }
         }
 
+        stage('Check Secrets') {
+            steps {
+                container('kubectl') {
+                    sh "kubectl get secrets -n 2401025"
+                }
+            }
+        }
+
+        stage('Test Image Pull') {
+            steps {
+                container('kubectl') {
+                    sh """
+                        kubectl run test-pull --image=nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/2401025-project/googlesheetclone-app-2401025:latest \
+                        --namespace=2401025 --restart=Never --image-pull-policy=Always --dry-run=client -o yaml
+                    """
+                }
+            }
+        }
+        
+        stage('Verify Secrets') {
+            steps {
+                container('kubectl') {
+                sh 'kubectl get secret -n 2401025'
+                }
+            }
+        }
+
+        stage('Describe Pods') {
+            steps {
+                container('kubectl') {
+                    sh 'kubectl describe pods -n 2401025 | sed -n "/Events/,$p"'
+                }
+            }
+        }
+
+
+
+
     }
 }
