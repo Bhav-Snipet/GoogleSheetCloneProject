@@ -2,13 +2,16 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: googlesheetclone-deployment
+  namespace: "2401025"
   labels:
     app: googlesheetclone
+
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: googlesheetclone
+
   template:
     metadata:
       labels:
