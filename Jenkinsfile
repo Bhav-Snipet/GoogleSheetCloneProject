@@ -6,6 +6,7 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
+  
   - name: sonar-scanner
     image: sonarsource/sonar-scanner-cli
     command: ["cat"]
@@ -72,7 +73,7 @@ spec:
                                 -Dsonar.projectKey=googlesheetclone \
                                 -Dsonar.projectName=googlesheetclone \
                                 -Dsonar.host.url=http://my-sonarqube-sonarqube.sonarqube.svc.cluster.local:9000 \
-                                -Dsonar.login=$SONAR_TOKEN \
+                                -Dsonar.token=$SONAR_TOKEN \
                                 -Dsonar.sources=.
                         '''
                     }
@@ -95,10 +96,8 @@ spec:
             steps {
                 container('dind') {
                     sh '''
-                        docker tag googlesheetclone-app:latest \
-                        nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/2401025-project/googlesheetclone-app-2401025:latest
-                        
-                        docker push nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/2401025-project/googlesheetclone-app-2401025:latest
+                        docker tag googlesheetclone-app:latest nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/my-repository/2401025-project/googlesheetclone-app-2401025:latest
+                        docker push nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/my-repository/2401025-project/googlesheetclone-app-2401025:latest
                     '''
                 }
             }
@@ -119,7 +118,6 @@ spec:
             }
         }
 
-
         stage('Deploy App') {
             steps {
                 container('kubectl') {
@@ -132,9 +130,7 @@ spec:
                             kubectl apply -f service.yaml -n 2401025
                             kubectl apply -f ingress.yaml -n 2401025
 
-                            kubectl delete pod -l app=googlesheetclone -n 2401025 || true
-
-                            kubectl scale deployment googlesheetclone-deployment --replicas=0 -n 2401025
+                            kubectl delete pod -l app=googlesheetclone -n 2401025 --ignore-not-found=true
                             sleep 5
                             kubectl scale deployment googlesheetclone-deployment --replicas=1 -n 2401025
                             """
@@ -157,29 +153,13 @@ spec:
             }
         }
 
-        stage('Check Secrets') {
-            steps {
-                container('kubectl') {
-                    sh "kubectl get secrets -n 2401025"
-                }
-            }
-        }
-
         stage('Test Image Pull') {
             steps {
                 container('kubectl') {
                     sh """
-                        kubectl run test-pull --image=nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/2401025-project/googlesheetclone-app-2401025:latest \
+                        kubectl run test-pull --image=nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/my-repository/2401025-project/googlesheetclone-app-2401025:latest \
                         --namespace=2401025 --restart=Never --image-pull-policy=Always --dry-run=client -o yaml
                     """
-                }
-            }
-        }
-        
-        stage('Verify Secrets') {
-            steps {
-                container('kubectl') {
-                sh 'kubectl get secret -n 2401025'
                 }
             }
         }
@@ -191,9 +171,5 @@ spec:
                 }
             }
         }
-
-
-
-
     }
 }
