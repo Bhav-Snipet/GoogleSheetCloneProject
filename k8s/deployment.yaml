@@ -8,6 +8,13 @@ metadata:
 
 spec:
   replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+
   selector:
     matchLabels:
       app: googlesheetclone
@@ -16,13 +23,25 @@ spec:
     metadata:
       labels:
         app: googlesheetclone
+      annotations:
+        redeployTimestamp: "{{ .Release.Time }}"   # forces new pod pull on deploy
+
     spec:
       imagePullSecrets:
         - name: nexus-registry-secret
+
       containers:
         - name: googlesheetclone-app
           image: nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/my-repository/2401025-project/googlesheetclone-app-2401025:latest
           imagePullPolicy: Always
+
           ports:
             - containerPort: 80
 
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
