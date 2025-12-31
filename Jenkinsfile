@@ -164,12 +164,13 @@ spec:
             }
         }
 
-        stage('Describe Pods') {
+       stage('Describe Pods') {
             steps {
                 container('kubectl') {
-                    sh 'kubectl describe pods -n 2401025 | sed -n "/Events/,$p"'
+                sh 'kubectl describe pods -n 2401025 | sed -n "/Events/,$p" || true'
                 }
             }
         }
+
     }
 }
