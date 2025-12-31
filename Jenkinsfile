@@ -153,24 +153,31 @@ spec:
             }
         }
 
-        stage('Test Image Pull') {
+        /* 🔥 Method-1 Debug Stage Added Here */
+        stage('Manual Debug Commands') {
             steps {
                 container('kubectl') {
                     sh """
-                        kubectl run test-pull --image=nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/my-repository/2401025-project/googlesheetclone-app-2401025:latest \
-                        --namespace=2401025 --restart=Never --image-pull-policy=Always --dry-run=client -o yaml
+                    echo '=== Secrets List ==='
+                    kubectl get secret -n 2401025
+
+                    echo '=== Secret Details ==='
+                    kubectl describe secret nexus-registry-secret -n 2401025
+
+                    echo '=== Pull Image Test ==='
+                    kubectl run test-pull --image=nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/my-repository/2401025-project/googlesheetclone-app-2401025:latest \
+                    --namespace=2401025 --restart=Never --image-pull-policy=Always --dry-run=client -o yaml
                     """
                 }
             }
         }
 
-       stage('Describe Pods') {
+        stage('Describe Pods') {
             steps {
                 container('kubectl') {
-                sh 'kubectl describe pods -n 2401025 | sed -n "/Events/,$p" || true'
+                    sh 'kubectl describe pods -n 2401025 | sed -n "/Events/,$p" || true'
                 }
             }
         }
-
     }
 }
