@@ -31,9 +31,10 @@ spec:
         - name: nexus-registry-secret
 
       containers:
-        - name: googlesheetclone-app
-          image: nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/my-repository/2401025-project/googlesheetclone-app-2401025:latest
-          imagePullPolicy: Always
+      - name: googlesheetclone-app
+        image: 192.168.20.250:30085/2401025-project/googlesheetclone-app-2401025:latest
+        imagePullPolicy: Always
+
 
           ports:
             - containerPort: 80
