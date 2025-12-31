@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: default
+  namespace: 2401025
+imagePullSecrets:
+- name: nexus-registry-secret

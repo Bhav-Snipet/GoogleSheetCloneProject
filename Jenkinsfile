@@ -118,27 +118,29 @@ spec:
             }
         }
 
-        stage('Deploy App') {
-            steps {
-                container('kubectl') {
-                    script {
-                        dir('k8s') {
-                            sh """
-                            kubectl get namespace 2401025 || kubectl create namespace 2401025
+       stage('Deploy App') {
+        steps {
+            container('kubectl') {
+                script {
+                    dir('k8s') {
+                        sh """
+                        kubectl get namespace 2401025 || kubectl create namespace 2401025
 
-                            kubectl apply -f deployment.yaml -n 2401025
-                            kubectl apply -f service.yaml -n 2401025
-                            kubectl apply -f ingress.yaml -n 2401025
+                        kubectl apply -f sa-patch.yaml -n 2401025      # <-- ADD THIS LINE
+                        kubectl apply -f deployment.yaml -n 2401025
+                        kubectl apply -f service.yaml -n 2401025
+                        kubectl apply -f ingress.yaml -n 2401025
 
-                            kubectl delete pod -l app=googlesheetclone -n 2401025 --ignore-not-found=true
-                            sleep 5
-                            kubectl scale deployment googlesheetclone-deployment --replicas=1 -n 2401025
-                            """
-                        }
+                        kubectl delete pod -l app=googlesheetclone -n 2401025 --ignore-not-found=true
+                        sleep 5
+                        kubectl scale deployment googlesheetclone-deployment --replicas=1 -n 2401025
+                        """
                     }
                 }
             }
         }
+    }
+
 
         stage('Debug Kubernetes State') {
             steps {
